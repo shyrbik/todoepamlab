@@ -1,6 +1,6 @@
 <template>
 
-    <div style="background-color: #ffffff; border-radius: 2%;">
+    <div style="background-color: #ffffff; border-radius: 1%;">
         <div class="slds-page-header">
             <div class="slds-page-header__row">
                 <div class="slds-page-header__col-title">
@@ -12,7 +12,7 @@
                             <div class="slds-page-header__name">
                                 <div class="slds-page-header__name-title">
                                     <h1>
-                                        <span class="slds-page-header__title slds-truncate">TO-DO LIST</span>
+                                        <span class="slds-page-header__title slds-truncate">TEST TO-DO LIST</span>
                                     </h1>
                                 </div>
                             </div>
@@ -74,45 +74,67 @@
                     </lightning-layout-item>
                 </lightning-layout>
             </lightning-card>
-
+            <div class="slds-tabs_default">
+                <ul class="slds-tabs_default__nav" role="tablist">
+                    <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">Item One</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Two" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" id="tab-default-2__item">Item Two</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Three" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3" id="tab-default-3__item">Item Three</a>
+                    </li>
+                </ul>
+                <div id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">Item One Content</div>
+                <div id="tab-default-2" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">Item Two Content</div>
+                <div id="tab-default-3" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-3__item">Item Three Content</div>
+            </div>
 
             <h1 style = " padding-bottom: 0%; font-size: 2em;"><b>Uncompleted ToDo</b></h1>
-          <template if:true={uncompletedToDoList}>
-            <template for:each={uncompletedToDoList} for:item="todo">
+            <template if:true={uncompletedToDoList}>
+                <template for:each={uncompletedToDoList} for:item="todo">
 
-                <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
-                    <div  class="slds-box">
-          <div style = "float: left; height: 6em;">
-          </div>
-                        <lightning-card>
-                    <h2 slot="title">
-                        <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
-                        {todo.Name}
-                    </h2>
-                            <div align="left" slot="footer">
-                            <lightning-badge label={todo.Close_Date__c}></lightning-badge>
-                            <lightning-badge label={todo.Priority__c}></lightning-badge>
+                    <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
+                        <div  class="slds-box">
+                            <div style = "float: left; height: 6em;">
                             </div>
-                            <p class="slds-p-horizontal_small">{todo.Description__c}</p>
-                            <br />
-                            <lightning-button-group>
-                                <lightning-button label="Complete"></lightning-button>
-                                <lightning-button label="Edit"></lightning-button>
-                                <lightning-button label="Add SubToDo"></lightning-button>
-                                <lightning-button label="Delete" variant="destructive" icon-name="utility:delete"></lightning-button>
-                            </lightning-button-group>
-                        <!-- нет имени владельца -->
-                        <!--<p>Owner:<em>{todo.OwnerId}</em>-->
+                            <lightning-card>
+                                <h2 slot="title">
+                                    <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+                                   {todo.Name}
+                                </h2>
+                                <div align="left" slot="footer">
+                                   <lightning-badge label={todo.Close_Date__c}></lightning-badge>
+                                   <lightning-badge label={todo.Priority__c}></lightning-badge>
+                              </div>
+                               <p class="slds-p-horizontal_small">{todo.Description__c}</p>
+                                <br />
+                               <lightning-button-group>
+                                    <lightning-button label="Complete"></lightning-button>
+                                   <lightning-button label="Edit"></lightning-button>
+                                    <lightning-button label="Add SubToDo"></lightning-button>
+                                    <lightning-button
+                                           label="Delete"
+                                           variant="destructive"
+                                           icon-name="utility:delete"
+                                           data-recordid={todo.Id}
+                                           onclick={deleteToDo}>
 
-                        </lightning-card>
+                                  </lightning-button>
+                               </lightning-button-group>
+                                <!-- нет имени владельца -->
+                                <!--<p>Owner:<em>{todo.OwnerId}</em>-->
+
+                            </lightning-card>
 
 
 
-                    </div>
-                </lightning-layout-item>
+                        </div>
+                    </lightning-layout-item>
 
-          </template>
-          </template>
+                </template>
+            </template>
         </div>
-      </div>
+    </div>
 </template>
