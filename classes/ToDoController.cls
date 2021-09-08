@@ -1,87 +1,33 @@
-public class ToDoController {
-    //Add a new item in ToDo__c object
-    //Accepts serialized ToDo object
-    @AuraEnabled
-    public static String addTodo(String payload) {
-        ToDo payloadObject = (ToDo) JSON.deserialize(payload, ToDo.class);
+public with sharing class ToDoControllerSecond {
 
-        SObject todo = (Sobject) Type.forName('ToDo__c').newInstance();
-        todo.put('Name', payloadObject.todoName);
-        todo.put('Done__c', payloadObject.done);
-
-        insert todo;
-
-        return String.valueOf(todo.Id);
-    }
-
-    //Update an item
-    //Accepts serialized ToDo object
-    @AuraEnabled
-    public static void updateTodo(String payload) {
-        ToDo payloadObject = (ToDo) JSON.deserialize(payload, ToDo.class);
-
-        SObject todo = (Sobject) Type.forName('ToDo__c').newInstance();
-        todo.put('Id', payloadObject.todoId);
-        todo.put('Name', payloadObject.todoName);
-        todo.put('Done__c', payloadObject.done);
-
-        update todo;
-    }
-
-    //Delete an item
-    //Accepts id of the item to delete
-    @AuraEnabled
-    public static void deleteTodo(String todoId) {
-        SObject todo = (Sobject) Type.forName('ToDo__c').newInstance();
-        todo.put('Id', todoId);
-
-        delete todo;
-    }
-
-    //Get all todos for last 7 days
-    //The method is cacheable, means the response will cached in the browser
     @AuraEnabled(cacheable=true)
-    public static List<ToDo> getAllTodos() {
-        List<SObject> todos = Database.query(
-                'SELECT Id, Name, CreatedDate, Done__c FROM ToDo__c WHERE CreatedDate = LAST_N_DAYS:7 ORDER BY CreatedDate DESC'
-        );
+    public static List<Todo__c> uncompletedToDo(){
 
-        return getToDos(todos);
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c WHERE Status__c = FALSE];
     }
 
-    //Get all todos for today
-    @AuraEnabled
-    public static List<ToDo> getCurrentTodos() {
-        List<SObject> todos = Database.query(
-                'SELECT Id, Name, CreatedDate, Done__c FROM ToDo__c WHERE CreatedDate = TODAY ORDER BY CreatedDate DESC'
-        );
-        return getToDos(todos);
+    @AuraEnabled(cacheable=true)
+    public static List<Todo__c> completedToDo(){
+
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c WHERE Status__c = TRUE];
     }
 
-    //Wrap ToDo__c SObject into ToDo object
-    public static List<ToDo> getToDos(List<SObject> objs) {
-        List<ToDo> todos = new List<ToDo>();
-        for (SObject obj : objs) {
-            ToDo todo = new ToDo();
-            todo.todoId = obj.Id;
-            todo.todoName = String.valueOf(obj.get('Name'));
-            todo.todoDate = Date.valueOf(obj.get('CreatedDate'));
-            todo.done = Boolean.valueOf(obj.get('Done__c'));
-            todos.add(todo);
-        }
-
-        return todos;
+    @AuraEnabled(cacheable=true)
+    public static List<Todo__c> allToDo(){
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c];
     }
 
-    //Wrapper Class to represent a ToDo Item
-    public class ToDo {
-        @AuraEnabled
-        public String todoId;
-        @AuraEnabled
-        public String todoName;
-        @AuraEnabled
-        public Date todoDate;
-        @AuraEnabled
-        public Boolean done;
+    //update methods
+    @AuraEnabled(cacheable=true)
+    public static Todo__c getSingleToDo(){
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Todo__c getSingleSubToDo(){
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c];
+    }
+
+
+
 }
