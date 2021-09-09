@@ -1,0 +1,161 @@
+<template>
+
+    <div style="background-color: #ffffff; border-radius: 1%;">
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="custom:custom18" title="custom18"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate">TO-DO LIST</span>
+                                    </h1>
+                                </div>
+                            </div>
+                            <p class="slds-page-header__name-meta">Manage all your list items from this page</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style = "padding: 3%;">
+            <!--
+            Фиксирует блок на странице, при прокрутке не смещается
+            <header class="slds-global-header_container">
+                <div class="slds-global-header">
+
+
+
+
+                </div>
+            </header>-->
+            <!--
+            Add new To ToDo
+            <template>
+                <lightning-card title="Create Account Record using LDS">
+                    <lightning-layout>
+                        <lightning-layout-item size="6">
+
+                            <lightning-input class="slds-p-around_medium" label="Name" name="accoutName"
+                                             onchange={nameChangedHandler}></lightning-input>
+                            <lightning-input class="slds-p-around_medium" label="Account Number" name="accoutNumber"
+                                             onchange={numberChangedHandler}></lightning-input>
+                            <lightning-input class="slds-p-around_medium" label="Phone" type="phone" name="accountPhone"
+                                             onchange={phoneChangedHandler}></lightning-input>
+                            <br/>
+                            <lightning-button class="slds-m-left_x-small" label="Create ToDo" variant="brand"
+                                              onclick={createAccount}></lightning-button>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </lightning-card>
+            </template>
+
+            Для ввода приоритета
+            https://developer.salesforce.com/docs/component-library/bundle/lightning-dual-listbox/example
+
+            -->
+
+<!--            Here should be modal window-->
+            <template if:true={openModal}>
+                <div class="slds-modal slds-fade-in-open slds-backdrop">
+<!--            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">-->
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                            <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New task to do</h2>
+                        <p class="slds-m-top_x-small">Please, specify Task's name, description and close date in order to create it
+                            <a href="#">contain links or be a link</a>.</p>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning-card title="Create TODO using LDS">
+                            <lightning-layout>
+                                <lightning-layout-item size="6">
+
+                                    <lightning-input class="slds-p-around_medium" label="Name" onchange={handleChangeName}></lightning-input>
+                                    <lightning-input class="slds-p-around_medium" label="Description" onchange={handleChangeDescription}></lightning-input>
+                                    <lightning-input class="slds-p-around_medium" label="CloseDate" type="Date" onchange={handleChangeDateClose}></lightning-input>
+                                    <br/>
+
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-card>
+                       </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+                        <button class="slds-button slds-button_brand" label="Create ToDo" variant="brand"
+                                onclick={saveCreatedToDo}>Save</button>
+                    </footer>
+                </div>
+                </div>
+<!--            </section>-->
+            </template>
+<!--            <div class="slds-backdrop slds-backdrop_open"></div>-->
+            <lightning-button label="Create new Task" class="slds-m-left_x-small" onclick={showModal}></lightning-button>
+
+
+            <div class="slds-tabs_default">
+                <ul class="slds-tabs_default__nav" role="tablist">
+                    <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">Item One</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Two" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" id="tab-default-2__item">Item Two</a>
+                    </li>
+                    <li class="slds-tabs_default__item" title="Item Three" role="presentation">
+                        <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3" id="tab-default-3__item">Item Three</a>
+                    </li>
+                </ul>
+                <div id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">Item One Content</div>
+                <div id="tab-default-2" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">Item Two Content</div>
+                <div id="tab-default-3" class="slds-tabs_default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-3__item">Item Three Content</div>
+            </div>
+
+            <h1 style = " padding-bottom: 0%; font-size: 2em;"><b>Uncompleted ToDo</b></h1>
+          <template if:true={uncompletedToDoList}>
+            <template for:each={uncompletedToDoList} for:item="todo">
+
+                <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
+                    <div  class="slds-box">
+          <div style = "float: left; height: 6em;">
+          </div>
+                        <lightning-card>
+                    <h2 slot="title">
+                        <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+                        {todo.Name}
+                    </h2>
+                            <div align="left" slot="footer">
+                            <lightning-badge label={todo.Close_Date__c}></lightning-badge>
+                            <lightning-badge label={todo.Priority__c}></lightning-badge>
+                            </div>
+                            <p class="slds-p-horizontal_small">{todo.Description__c}</p>
+                            <br />
+                            <lightning-button-group>
+                                <lightning-button label="Complete" ></lightning-button>
+                                <lightning-button label="Edit"></lightning-button>
+                                <lightning-button label="Add SubToDo"></lightning-button>
+                                <lightning-button label="Delete" variant="destructive" icon-name="utility:delete"></lightning-button>
+                            </lightning-button-group>
+                        <!-- нет имени владельца -->
+                        <!--<p>Owner:<em>{todo.OwnerId}</em>-->
+
+                        </lightning-card>
+
+
+
+                    </div>
+                </lightning-layout-item>
+
+          </template>
+          </template>
+        </div>
+      </div>
+</template>
