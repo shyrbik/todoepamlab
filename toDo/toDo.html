@@ -27,10 +27,6 @@
             Фиксирует блок на странице, при прокрутке не смещается
             <header class="slds-global-header_container">
                 <div class="slds-global-header">
-
-
-
-
                 </div>
             </header>-->
             <!--
@@ -39,7 +35,6 @@
                 <lightning-card title="Create Account Record using LDS">
                     <lightning-layout>
                         <lightning-layout-item size="6">
-
                             <lightning-input class="slds-p-around_medium" label="Name" name="accoutName"
                                              onchange={nameChangedHandler}></lightning-input>
                             <lightning-input class="slds-p-around_medium" label="Account Number" name="accoutNumber"
@@ -53,24 +48,19 @@
                     </lightning-layout>
                 </lightning-card>
             </template>
-
             Для ввода приоритета
             https://developer.salesforce.com/docs/component-library/bundle/lightning-dual-listbox/example
-
             -->
             <lightning-card title="Create TODO using LDS">
                 <lightning-layout>
                     <lightning-layout-item size="6">
 
-                        <lightning-input class="slds-p-around_medium" label="Name" name="todoName"
-                                         onchange={nameChangedHandler}></lightning-input>
-                        <lightning-input class="slds-p-around_medium" label="Description" name="todoDescription"
-                                         onchange={descriptionChangedHandler}></lightning-input>
-                        <lightning-input class="slds-p-around_medium" label="CloseDate" type="Date" name="todoCloseDate"
-                                         onchange={dateCloseChangedHandler}></lightning-input>
+                        <lightning-input class="slds-p-around_medium" label="Name" onchange={handleChangeName}></lightning-input>
+                        <lightning-input class="slds-p-around_medium" label="Description" onchange={handleChangeDescription}></lightning-input>
+                        <lightning-input class="slds-p-around_medium" label="CloseDate" type="Date" onchange={handleChangeDateClose}></lightning-input>
                         <br/>
                         <lightning-button class="slds-m-left_x-small" label="Create ToDo" variant="brand"
-                                          onclick={createToDo}></lightning-button>
+                                          onclick={saveCreatedToDo}></lightning-button>
                     </lightning-layout-item>
                 </lightning-layout>
             </lightning-card>
@@ -95,41 +85,52 @@
             <template if:true={uncompletedToDoList}>
                 <template for:each={uncompletedToDoList} for:item="todo">
 
-                    <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
-                        <div  class="slds-box">
+                     <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
+
+                        <div class="slds-box">
                             <div style = "float: left; height: 6em;">
                             </div>
                             <lightning-card>
                                 <h2 slot="title">
                                     <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
-                                   {todo.Name}
+                                    {todo.Name}
                                 </h2>
                                 <div align="left" slot="footer">
-                                   <lightning-badge label={todo.Close_Date__c}></lightning-badge>
-                                   <lightning-badge label={todo.Priority__c}></lightning-badge>
-                              </div>
-                               <p class="slds-p-horizontal_small">{todo.Description__c}</p>
+                                    <lightning-badge label={todo.Close_Date__c}></lightning-badge>
+                                    <lightning-badge label={todo.Priority__c}></lightning-badge>
+                                </div>
+                                <p class="slds-p-horizontal_small">{todo.Description__c}</p>
                                 <br />
-                               <lightning-button-group>
+                                <lightning-button-group>
                                     <lightning-button label="Complete"></lightning-button>
-                                   <lightning-button label="Edit"></lightning-button>
+                                    <lightning-button label="Edit"></lightning-button>
                                     <lightning-button label="Add SubToDo"></lightning-button>
                                     <lightning-button
-                                           label="Delete"
-                                           variant="destructive"
-                                           icon-name="utility:delete"
-                                           data-recordid={todo.Id}
-                                           onclick={deleteToDo}>
+                                            label="Delete"
+                                            variant="destructive"
+                                            icon-name="utility:delete"
+                                            data-recordid={todo.Id}
+                                            onclick={deleteToDo}>
+                                    </lightning-button>
+                                </lightning-button-group>
 
-                                  </lightning-button>
-                               </lightning-button-group>
-                                <!-- нет имени владельца -->
-                                <!--<p>Owner:<em>{todo.OwnerId}</em>-->
+                                <lightning-card title="SubToDo" icon-name="custom:custom14">
+                                    <ul class="slds-m-around_medium">
+                                <template for:each={todo.Sub_ToDos__r} for:item="subTodo">
+                                    <template if:false={subTodo.Status__c}>
+                                    <li key={subTodo.Id}>
+                                        <lightning-input
+                                            type="checkbox"
+                                            label={subTodo.Name}
+                                            onchange={handleChangeStatus}
+                                            checked>
+                                        </lightning-input></li>
+                                    </template>>
 
+                                </template>
+                                    </ul>
+                                </lightning-card>
                             </lightning-card>
-
-
-
                         </div>
                     </lightning-layout-item>
 
