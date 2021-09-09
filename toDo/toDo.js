@@ -3,56 +3,66 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import { reduceErrors } from 'c/ldsUtils';
-import uncompletedToDo from '@salesforce/apex/ToDoControllerSecond.uncompletedToDo';
-import completedToDo from '@salesforce/apex/ToDoControllerSecond.completedToDo';
-import allToDo from '@salesforce/apex/ToDoControllerSecond.allToDo';
+import getUncompletedToDo from '@salesforce/apex/ToDoControllerSecond.getUncompletedToDo';
+import getCompletedToDo from '@salesforce/apex/ToDoControllerSecond.getCompletedToDo';
+import getAllToDo from '@salesforce/apex/ToDoControllerSecond.getAllToDo';
+//import completedToDo from '@salesforce/apex/ToDoControllerSecond.getCompletedToDo';
+//import {getSObjectValue} from "@salesforce/apex";
+//import uncompletedSubToDo from '@salesforce/apex/ToDoControllerSecond.uncompletedSubToDo';
+//import completedSubToDo from '@salesforce/apex/ToDoControllerSecond.completedSubToDo';
+
 
 import getSingleToDo from '@salesforce/apex/ToDoControllerSecond.getSingleToDo';
 import getSingleSubToDo from '@salesforce/apex/ToDoControllerSecond.getSingleSubToDo';
 
+import ToDo from '@salesforce/apex/ToDoController.uncompletedToDo';
+import TODO_OBJECT from '@salesforce/schema/Todo__c';
+import TODO_NAME from '@salesforce/schema/Todo__c.Name';
+import TODO_DESCRIPTION from '@salesforce/schema/Todo__c.Description__c';
+import TODO_CLOSEDATE from '@salesforce/schema/Todo__c.Close_Date__c';
+import TODO_PRIORITY from '@salesforce/schema/Todo__c.Priority__c';
+import TODO_STATUS from '@salesforce/schema/Todo__c.Status__c';
+
+
 export default class toDo extends LightningElement {
 
+    subToDo;
     error;
     //todos for updating
     singleToDo;
     singleSubToDo;
+    subToDoList;
+    status;
 
     uncompletedToDoList;
     completedToDoList;
-    //спросить ка рефрешнуть весь апекс
-    refreshToDoList =[];
     allToDoList;
 
- /*   connectedCallback(){
-    uncompletedToDo().then(resp=>{
-        this.uncompletedToDoList = resp.data;
-    }).catch(err => console.log(err))
-    console.log('Connected');
-}*/
+    allSubToDoList;
+    uncompletedSubToDoList;
+    completedToSubDoList;
+
+
+
+
+    handleChange(event) {
+        this.status = event.target.checked;
+    }
+
+
 //call apex methods
+
+
+    handleChangeStatus(event){
+        this.status = event.target.checked;
+
+    }
+
+
+    //рефрешать через this.getToDoList();
+
     connectedCallback(){
-        uncompletedToDo()
-            .then(result => {
-                this.uncompletedToDoList = result;
-                this.error = undefined;
-            })
-            .catch(error => {
-                this.error = error;
-                this.uncompletedToDoList = undefined;
-            });
-
-        completedToDo()
-            .then(result => {
-                this.completedToDoList = result;
-                this.error = undefined;
-            })
-            .catch(error => {
-                this.error = error;
-                this.completedToDoList = undefined;
-            });
-
-//наверное не нужен для каждого листа свой надо будет делать
-        allToDo()
+        getAllToDo()
             .then(result => {
                 this.allToDoList = result;
                 this.error = undefined;
@@ -62,13 +72,31 @@ export default class toDo extends LightningElement {
                 this.allToDoList = undefined;
             });
 
+        getUncompletedToDo()
+            .then(result => {
+                this.uncompletedToDoList = result;
+                this.error = undefined;
+            })
+            .catch(error => {
+                this.error = error;
+                this.uncompletedToDoList = undefined;
+            });
+
+        getCompletedToDo()
+            .then(result => {
+                this.completedToDoList = result;
+                this.error = undefined;
+            })
+            .catch(error => {
+                this.error = error;
+                this.completedToDoList = undefined;
+            }
+            );
 
         console.log('Connected');
     }
 
 
-
-    //delete uncompleted record
 
     deleteToDo(event) {
         const recordId = event.target.dataset.recordid;
@@ -81,7 +109,6 @@ export default class toDo extends LightningElement {
                         variant: 'success'
                     })
                 );
-                return refreshApex(this.uncompletedToDoList);
             })
             .catch((error) => {
                 this.dispatchEvent(
@@ -94,6 +121,10 @@ export default class toDo extends LightningElement {
             });
     }
 
+
+
+
+    /*
     deleteCompletedToDo(event) {
         const recordId = event.target.dataset.recordid;
         event.target.accessKeyLabel
@@ -147,6 +178,7 @@ export default class toDo extends LightningElement {
           this.todoData = undefined;
       }
   }*/
+
 
 
 }
