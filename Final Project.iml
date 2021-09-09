@@ -17,6 +17,10 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
+                            <option name="name" value="ConnectToOrg" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="ToDoController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
