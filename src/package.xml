@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>ConnectToOrg</members>
+        <members>EmailToTodo</members>
+        <members>QueueTriggerHandler</members>
+        <members>QueueTriggerHandlerHelper</members>
+        <members>TestConnectToOrg</members>
+        <members>ToDoController</members>
+        <members>ToDoControllerSecond</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>QueueTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>ldsUtils</members>
+        <members>testalex</members>
         <members>toDo</members>
         <name>LightningComponentBundle</name>
     </types>
