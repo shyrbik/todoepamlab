@@ -2,10 +2,7 @@ public with sharing class ToDoControllerSecond {
 
     @AuraEnabled
     public static List<Todo__c> getUncompletedToDo(){
-        System.debug([SELECT Name, Priority__c, Close_Date__c, Description__c, (SELECT Id, Name FROM Sub_ToDos__r)
-        FROM Todo__c
-        WHERE Status__c = FALSE].size() + ' size');
-        return [SELECT Name, Priority__c, Close_Date__c, Description__c, (SELECT Id, Name FROM Sub_ToDos__r)
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c, RecordTypeName__c,  (SELECT Id, Name, Status__c FROM Sub_ToDos__r)
                 FROM Todo__c
                 WHERE Status__c = FALSE];
     }
@@ -18,7 +15,7 @@ public with sharing class ToDoControllerSecond {
     @AuraEnabled
     public static List<Todo__c> getCompletedToDo(){
 
-        return [SELECT Name, Priority__c, Close_Date__c, Description__c, (SELECT Id, Name FROM Sub_ToDos__r)
+        return [SELECT Name, Priority__c, Close_Date__c, Description__c, RecordTypeName__c, (SELECT Id, Name, Status__c FROM Sub_ToDos__r)
                 FROM Todo__c
                 WHERE Status__c = TRUE];
     }
@@ -29,16 +26,6 @@ public with sharing class ToDoControllerSecond {
     }
 
 
-
-    @AuraEnabled
-    public static List<Todo__c> getAllToDo(){
-        return [SELECT Name, Priority__c, Close_Date__c, Description__c FROM Todo__c];
-    }
-
-    @AuraEnabled
-    public static List<Sub_ToDo__c> getAllSubToDo(){
-        return [SELECT Id, Name, Description__c FROM Sub_ToDo__c];
-    }
 
     //update methods
     @AuraEnabled
@@ -54,6 +41,21 @@ public with sharing class ToDoControllerSecond {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
         ];
+    }
+
+    @AuraEnabled
+    public static String setRecordTypeId() {
+
+        Map<String, Id> mapRecordType = new Map<String, Id>();
+        List<String> recordTypeName =new List<String>{'Programming', 'Testing', 'Design', 'Other'};
+
+        for (String recType: recordTypeName){
+            mapRecordType.put(recType, Schema.SObjectType.Todo__c.getRecordTypeInfosByName()
+                    .get(recType).getRecordTypeId());
+        }
+        System.debug('Id for record types Todo__c = '+ mapRecordType.keySet());
+
+        return JSON.serialize(mapRecordType);
     }
 
 
