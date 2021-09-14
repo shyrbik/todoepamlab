@@ -1,7 +1,6 @@
 public with sharing class ConnectToOrg {
 
-    static final String END_POINT = 'https://cunning-impala-2956nx-dev-ed.my.salesforce.com/services/apexrest/ToDo__c/';
-    static final String ACCESS_TOKEN = '00D5g00000A3I8p!ARYAQDShB50jltB3VLXidUUBDcgVY0luZfP5E_SM0MYx4bDeSbZGlH5IWvGQbCZ5HOwxyg2oR_Xnd4jT7CPpIXCH.YY7M.mg';
+    static final String END_POINT = 'callout:Other_Org/services/apexrest/ToDo__c/';
 
     public static HttpResponse makePostCallout(String requestBody)
     {
@@ -9,22 +8,24 @@ public with sharing class ConnectToOrg {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(END_POINT);
         request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader('Authorization', 'Bearer ' + ACCESS_TOKEN);
+        request.setHeader('Content-Type', 'application/json');
+        request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
+        System.debug(request.getEndpoint());
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
-        System.debug(response);
+        System.debug(response.getBody() + '     ' + response);
         return response;
     }
 
-    public static HttpResponse makeDeleteCallout(String id)
+    public static HttpResponse makeDeleteCallout(String ExternalId)
     {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
-        request.setHeader('Authorization', 'Bearer ' + ACCESS_TOKEN);
-        request.setEndpoint(END_POINT + id);
+        request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
+        request.setEndpoint(END_POINT + ExternalId);
         request.setMethod('DELETE');
         HttpResponse response = http.send(request);
+        System.debug(response);
         return response;
     }
 
@@ -34,11 +35,12 @@ public with sharing class ConnectToOrg {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(END_POINT + id + '?_HttpMethod=PATCH');
         request.setMethod('POST');
-        request.setHeader('Authorization', 'Bearer ' + ACCESS_TOKEN);
+        request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
         request.setHeader('X-HTTP-Method-Override', 'PATCH');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
+        System.debug(response);
         return response;
     }
 }

@@ -25,6 +25,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="GetAccessTokenScheduler" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="QueueTriggerHandler" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -34,6 +38,10 @@
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="TestConnectToOrg" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="TestGetAccessTokenScheduler" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
