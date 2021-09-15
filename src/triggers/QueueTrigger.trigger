@@ -7,7 +7,6 @@ trigger QueueTrigger on Todo__c (before insert, before update, after insert, bef
     }
     if (Trigger.isDelete && Trigger.isBefore)
     {
-        System.debug(Trigger.oldMap);
         QueueTriggerHandler.onBeforeDelete(Trigger.oldMap);
     }
     if (Trigger.isUpdate && Trigger.isBefore)

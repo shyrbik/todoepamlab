@@ -1,43 +1,40 @@
 public with sharing class ConnectToOrg {
 
-    static final String END_POINT = 'callout:Other_Org/services/apexrest/ToDo__c/';
-
-    public static HttpResponse makePostCallout(String requestBody)
+    public static HttpRequest getRequest(String method, String endPoint)
     {
-        Http http = new Http();
         HttpRequest request = new HttpRequest();
-        request.setEndpoint(END_POINT);
-        request.setMethod('POST');
+        request.setEndpoint(endPoint);
+        request.setMethod(method);
         request.setHeader('Content-Type', 'application/json');
         request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
-        System.debug(request.getEndpoint());
+        return request;
+    }
+
+    public static HttpResponse makePostCallout(String requestBody, String END_POINT)
+    {
+        Http http = new Http();
+        HttpRequest request = getRequest('POST', END_POINT);
         request.setBody(requestBody);
+        System.debug(request.getEndpoint());
         HttpResponse response = http.send(request);
         System.debug(response.getBody() + '     ' + response);
         return response;
     }
 
-    public static HttpResponse makeDeleteCallout(String ExternalId)
+    public static HttpResponse makeDeleteCallout(Id ExternalId, String END_POINT)
     {
         Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
-        request.setEndpoint(END_POINT + ExternalId);
-        request.setMethod('DELETE');
+        HttpRequest request = getRequest('DELETE', END_POINT + ExternalId);
         HttpResponse response = http.send(request);
         System.debug(response);
         return response;
     }
 
-    public static HttpResponse makePatchCallout(String id, String requestBody)
+    public static HttpResponse makePatchCallout(Id ExternalId, String requestBody, String END_POINT)
     {
         Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(END_POINT + id + '?_HttpMethod=PATCH');
-        request.setMethod('POST');
-        request.setHeader('Authorization', 'Bearer {!$Other_Org.OAuthToken}');
+        HttpRequest request = getRequest('POST', END_POINT + ExternalId + '?_HttpMethod=PATCH');
         request.setHeader('X-HTTP-Method-Override', 'PATCH');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
         System.debug(response);
