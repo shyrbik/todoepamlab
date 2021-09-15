@@ -1,7 +1,9 @@
 <template>
-    <div style="background-color: #ffffff; border-radius: 1%; width: 70%;">
-        <div class="slds-page-header" style="width: 46%; position: fixed;z-index: 99;">
-            <div class="slds-page-header__row">
+    <div style="background-color: #ffffff; border-radius: 1%; width: 99%;">
+        <!--------------------------START HEADER ---------------------------------------------------------------------->
+        <div class="slds-grid slds-page-header" style="width: 65%; position: fixed;z-index: 99;">
+            <div class="header-name-block slds-col slds-page-header__row">
+
                 <div class="slds-page-header__col-title">
                     <div class="slds-media">
                         <div class="slds-media__figure">
@@ -11,7 +13,7 @@
                             <div class="slds-page-header__name">
                                 <div class="slds-page-header__name-title">
                                     <h1>
-                                        <span class="slds-page-header__title slds-truncate">TEST TO-DO LIST</span>
+                                        <span class="slds-page-header__title slds-truncate">TO-DO LIST MANAGER</span>
                                     </h1>
                                 </div>
                             </div>
@@ -20,21 +22,27 @@
                     </div>
                 </div>
             </div>
-            <lightning-button variant="brand" label="Create new ToDo" class="slds-m-left_x-small" onclick={showModal}>
 
+            <div class="slds-col">
+            <lightning-button variant="brand" label="Create new ToDo" class="slds-m-left_x-large" onclick={showModal}>
             </lightning-button>
+            </div>
         </div>
-        <div style = "padding: 3%;">
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-
-            <!--  ///////////////MODAL SCREEN FOR TO DO CREATION /////////////////////////////////// -->
+        <!--------------------------END HEADER ---------------------------------------------------------------------->
+        <!--------------------------START BODY ------------------------------------------------------------------------>
+        <div style="padding: 3%; width: 100%;">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <!----------------- MODAL SCREEN FOR TO DO CREATION -------------------------------------->
             <template if:true={openModal}>
-                <div class="slds-modal slds-fade-in-open slds-backdrop">
+                <section role="dialog" tabindex="-1"
+                         class="slds-align_absolute-center create-width-form slds-modal slds-fade-in-open slds-modal_medium"
+                         aria-labelledby="modal-heading-01" aria-modal="true"
+                         aria-describedby="modal-content-id-1">
                     <div class="slds-modal__container">
                         <header class="slds-modal__header">
                             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
@@ -43,13 +51,13 @@
                                 </svg>
                                 <span class="slds-assistive-text">Close</span>
                             </button>
-                            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New task to do</h2>
-                            <p class="slds-m-top_x-small">Please, specify Task's name, description and close date in order to create it.</p>
+                            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New ToDo Task</h2>
                         </header>
                         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                            <lightning-card title="Create new TODO">
+                            <lightning-card>
                                 <lightning-layout>
                                     <lightning-layout-item size="6">
+                                        <div class="create-width">
                                         <lightning-input class="slds-p-around_medium" label="Name" onchange={handleChangeName}></lightning-input>
                                         <lightning-input class="slds-p-around_medium" label="Description" onchange={handleChangeDescription}></lightning-input>
                                         <lightning-input class="slds-p-around_medium" label="CloseDate" type="Date" onchange={handleChangeDateClose}></lightning-input>
@@ -67,6 +75,7 @@
                                                             placeholder="Select Record Type"
                                                             options={optionsRecordId}
                                                             onchange={handleChangeRecordType} ></lightning-combobox>
+                                        </div>
                                         <br/>
                                     </lightning-layout-item>
                                 </lightning-layout>
@@ -78,52 +87,240 @@
                                     onclick={saveCreatedToDo}>Save</button>
                         </footer>
                     </div>
-                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </template>
-
+            <!-------- END MODAL SCREEN FOR CREATING TO DO --------------------------------------------------->
             <lightning-tabset>
+                <!----------------------- START UNCOMPLETED TO DO TASKS ------------------------------------------->
                 <lightning-tab label="Uncompleted ToDo">
-                    <h1 style = " padding-bottom: 0%; font-size: 2em;"><b>Uncompleted ToDo</b></h1>
-                    <template if:true={uncompletedToDoList}>
-                        <template for:each={uncompletedToDoList} for:item="todo">
+                    <div class="slds-scrollable" style="height:600px;">
+                        <h1 style=" padding-bottom: 0%; font-size: 2em;"><b>Uncompleted ToDo</b></h1>
+                        <template if:true={uncompletedToDoList}>
+                            <template for:each={uncompletedToDoList} for:item="todo">
+                                <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
+                                    <div class="slds-box" style="border-width: medium;">
+                                        <lightning-card>
+                                            <lightning-tabset>
+                                                <lightning-tab label="Short Info">
+                                                    <h2 class="slds-text-heading_large">
+                                                        <lightning-icon icon-name="utility:connected_apps"
+                                                                        size="medium"></lightning-icon>
+                                                        {todo.Name}
+                                                    </h2>
+                                                </lightning-tab>
+                                                <lightning-tab label="Full Info">
+                                                    <h2 class="slds-text-heading_large">
+                                                        <lightning-icon icon-name="utility:connected_apps"
+                                                                        size="medium"></lightning-icon>
+                                                        {todo.Name}
+                                                    </h2>
+                                                    <template if:true={todo.Description__c}>
+                                                        <br/>
+                                                        <p class="slds-p-horizontal_small">{todo.Description__c}</p>
+                                                    </template>
+                                                    <br/>
+                                                    <div align="left">
+                                                        <lightning-badge label={todo.Close_Date__c}></lightning-badge>
+                                                        <lightning-badge label={todo.Priority__c}></lightning-badge>
+                                                        <lightning-badge
+                                                                label={todo.RecordTypeName__c}></lightning-badge>
+                                                    </div>
+                                                    <br/>
+                                                    <lightning-button-group>
+                                                        <lightning-button onclick={closeToDo}
+                                                                          data-recordid={todo.Id}
+                                                                          label="Complete"></lightning-button>
 
-                            <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
+                                                        <lightning-button onclick={handleSetActiveSectionEdit}
+                                                                          label="Edit"></lightning-button>
+                                                        <lightning-button
+                                                                label="Delete"
+                                                                variant="destructive"
+                                                                icon-name="utility:delete"
+                                                                data-recordid={todo.Id}
+                                                                onclick={deleteToDo}>
+                                                        </lightning-button>
+                                                    </lightning-button-group>
+                                                    <lightning-record-edit-form
+                                                            class={editToDoForm}
+                                                            onsuccess={handleToDoEditSuccess}
+                                                            onsubmit={submitUpdateSuccess}
+                                                            object-api-name="Todo__c"
+                                                            record-id={todo.Id}>
+                                                        <lightning-input-field
+                                                                field-name={nameToDo}>
+                                                        </lightning-input-field>
+                                                        <lightning-input-field
+                                                                field-name={descriptionToDo}>
+                                                        </lightning-input-field>
+                                                        <lightning-input-field
+                                                                field-name={closeDateToDo}>
+                                                        </lightning-input-field>
+                                                        <lightning-input-field
+                                                                field-name={priorityToDo}>
+                                                        </lightning-input-field>
+                                                        <div class="slds-var-m-top_medium">
+                                                            <lightning-button
+                                                                    onclick={handleUpdateToDoSuccess}
+                                                                    variant="brand"
+                                                                    type="submit"
+                                                                    label="Save">
+                                                            </lightning-button>
+                                                        </div>
+                                                    </lightning-record-edit-form>
 
-                                <div class="slds-box">
-                                    <div style = "float: left; height: 6em;">
+                                                    <!-------------------------START SUBTODO BLOCK ------------------------------------------------------------------->
+                                                    <br />
+                                                    <br />
+                                                    <div class="sub-todo-block slds-box">
+                                                        <lightning-card>
+                                                            <h3 class="slds-text-heading_medium">
+                                                                <lightning-icon icon-name="utility:connected_apps"
+                                                                                size="small"></lightning-icon>
+                                                                SubToDo List
+                                                            </h3>
+
+                                                            <div class="sub-todo-create-form">
+                                                                <br>
+                                                                <!-- start create subtodo"-->
+                                                                <lightning-record-edit-form onsuccess={handleAddSubToDoSuccess}
+                                                                                            object-api-name="Sub_ToDo__c">
+                                                                    <div  class="slds-grid">
+                                                                        <div class="sab-todo-name-input slds-col">
+                                                                            <lightning-input-field
+                                                                                    class="slds-is-expanded slds-hide slds-hidden"
+                                                                                    disabled value={todo.Id}
+                                                                                    field-name="Parent_ToDo__c">
+                                                                            </lightning-input-field>
+                                                                            <lightning-input-field data-id="reset"
+                                                                                                   variant="label-hidden"
+                                                                                                   field-name="Name">
+                                                                            </lightning-input-field>
+                                                                        </div>
+                                                                        <div class="slds-col">
+                                                                            <lightning-button
+                                                                                    class="slds-m-top_small"
+                                                                                    type="submit"
+                                                                                    variant="brand"
+                                                                                    label="Create new SubToDo"
+                                                                                    onclick={createNewSubToDo}>
+                                                                            </lightning-button>
+                                                                        </div>
+                                                                    </div>
+                                                                </lightning-record-edit-form>
+                                                            </div>
+                                                            <!-- end create subtodo"-->
+                                                            <div class="sub-todo-list">
+                                                                <template if:true={todo.Sub_ToDos__r}>
+                                                                    <br>
+                                                                    <ul>
+                                                                        <template for:each={todo.Sub_ToDos__r}
+                                                                                  for:item="subTodo">
+                                                                            <template if:true={subTodo.Status__c}>
+                                                                                <li key={subTodo.Id}>
+                                                                                    <div class="slds-grid">
+                                                                                        <div class="name_sub_todo_div slds-col"><lightning-input
+                                                                                                type="checkbox"
+                                                                                                data-recordid={subTodo.Id}
+                                                                                                label={subTodo.Name}
+                                                                                                onchange={handleChangeUncompleteStatus}
+                                                                                                checked
+                                                                                        >
+                                                                                        </lightning-input></div>
+                                                                                        <div class="slds-col"><a data-recordid={subTodo.Id} onclick={deleteSubToDo}> Delete</a></div>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </template>
+                                                                            <template if:false={subTodo.Status__c}>
+                                                                                <li key={subTodo.Id}>
+                                                                                    <div class="slds-grid">
+                                                                                        <div class="name_sub_todo_active_div slds-col"><lightning-input
+                                                                                                type="checkbox"
+                                                                                                data-recordid={subTodo.Id}
+                                                                                                label={subTodo.Name}
+                                                                                                onchange={handleChangeUncompleteStatus}>
+                                                                                        </lightning-input></div>
+                                                                                        <div class="slds-col">
+                                                                                            <a data-recordid={subTodo.Id} onclick={deleteSubToDo}> Delete</a></div>
+                                                                                    </div>
+                                                                                </li>
+
+                                                                            </template>
+                                                                        </template>
+                                                                    </ul>
+
+                                                                </template>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+                                                    <!-------------------------END SUBTODO BLOCK------------------------------------------------------------------------->
+                                                </lightning-tab>
+                                            </lightning-tabset>
+
+                                        </lightning-card>
                                     </div>
-                                    <lightning-card>
-                                        <h2 class="slds-text-heading_medium" slot="title">
-                                            <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
-                                            {todo.Name}
-                                        </h2>
-                                        <template if:true={todo.Description__c}>
-                                        <br />
-                                        <p class="slds-p-horizontal_small">{todo.Description__c}</p>
-                                        </template>
-                                        <br />
-                                        <div align="left">
-                                            <lightning-badge label={todo.Close_Date__c}></lightning-badge>
-                                            <lightning-badge label={todo.Priority__c}></lightning-badge>
-                                            <lightning-badge label={todo.RecordTypeName__c}></lightning-badge>
-                                        </div>
-                                        <br />
-                                        <lightning-button-group>
-                                            <lightning-button onclick={closeToDo}
-                                                              data-recordid={todo.Id}
-                                                              label="Complete"></lightning-button>
+                                </lightning-layout-item>
+                            </template>
+                        </template>
+                    </div>
+                </lightning-tab>
+                <!----------END UNCOMPLETED TO DO TASKS -------------------------------->
+                <!----------------------- START COMPLETED TO DO TASKS ------------------------------------------->
+                <lightning-tab label="Completed ToDo">
+                    <div class="slds-scrollable" style="height:600px;">
+                        <h1 style=" padding-bottom: 0%; font-size: 2em;"><b>Сompleted ToDo</b></h1>
+                        <template if:true={completedToDoList}>
+                            <template for:each={completedToDoList} for:item="todo">
 
-                                            <lightning-button onclick={handleSetActiveSectionEdit} label="Edit"></lightning-button>
+                                <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
 
-                                            <lightning-button
-                                                    label="Delete"
-                                                    variant="destructive"
-                                                    icon-name="utility:delete"
-                                                    data-recordid={todo.Id}
-                                                    onclick={deleteToDo}>
-                                            </lightning-button>
-                                        </lightning-button-group>
+                                    <div class="slds-box" style="border-width: medium;">
+                                        <lightning-card>
+                                            <lightning-tabset>
+                                                <lightning-tab label="Short Info">
+                                                    <h2 class="slds-text-heading_large">
+                                                        <lightning-icon icon-name="utility:connected_apps"
+                                                                        size="medium"></lightning-icon>
+                                                        {todo.Name}
+                                                    </h2>
+                                                </lightning-tab>
+                                                <lightning-tab label="Full Info">
 
+                                                    <h2 class="slds-text-heading_large">
+                                                        <lightning-icon icon-name="utility:connected_apps"
+                                                                        size="medium"></lightning-icon>
+                                                        {todo.Name}
+                                                    </h2>
+                                                    <template if:true={todo.Description__c}>
+                                                        <br/>
+                                                        <p class="slds-p-horizontal_small">{todo.Description__c}</p>
+                                                    </template>
+                                                    <br/>
+                                                    <div align="left">
+                                                        <lightning-badge label={todo.Close_Date__c}></lightning-badge>
+                                                        <lightning-badge label={todo.Priority__c}></lightning-badge>
+                                                        <lightning-badge
+                                                                label={todo.RecordTypeName__c}></lightning-badge>
+                                                    </div>
+                                                    <br/>
+                                                    <lightning-button-group>
+                                                        <lightning-button onclick={reopenToDo}
+                                                                          data-recordid={todo.Id}
+                                                                          label="Reopen"></lightning-button>
+
+                                                        <lightning-button onclick={handleSetActiveSectionEdit}
+                                                                          label="Edit"></lightning-button>
+
+                                                        <lightning-button
+                                                                label="Delete"
+                                                                variant="destructive"
+                                                                icon-name="utility:delete"
+                                                                data-recordid={todo.Id}
+                                                                onclick={deleteToDo}>
+                                                        </lightning-button>
+                                                    </lightning-button-group>
+                                                    <!----- START TO DO EDIT FORM -------------->
                                                     <lightning-record-edit-form
                                                             class={editToDoForm}
                                                             onsuccess={handleToDoEditSuccess}
@@ -155,210 +352,105 @@
                                                             </lightning-button>
                                                         </div>
                                                     </lightning-record-edit-form>
+                                                    <!----- END TO DO EDIT FORM -------------->
 
-<!-------------------------START SUBTODO BLOCK ------------------------------------------------------------------->
-                                        <div>
-                                            <!-- create subtodo"-->
-                                            <lightning-record-edit-form onsuccess={handleAddSubToDoSuccess}
-                                                                        object-api-name="Sub_ToDo__c">
-                                                <lightning-messages>
-                                                </lightning-messages>
-                                                <lightning-input-field class="slds-is-expanded slds-hide slds-hidden"
-                                                                       disabled value={todo.Id}
-                                                                       field-name="Parent_ToDo__c">
-                                                </lightning-input-field>
-                                                <lightning-input-field data-id="reset" field-name="Name" value={defaultSubToDoName}>
-                                                </lightning-input-field>
-                                                <lightning-button
-                                                        class="slds-m-top_small"
-                                                        type="submit"
-                                                        variant="brand"
-                                                        label="Create new SubToDo"
-                                                        onclick={createNewSubToDo}>
-                                                </lightning-button>
-                                            </lightning-record-edit-form>
-                                        </div>
+                                                    <!------------------------------ START SUBTODO BLOCK ---------------------------------------------------------------->
+                                                    <br>
+                                                    <div class="sub-todo-block slds-box">
+                                                        <lightning-card>
+                                                            <h3 class="slds-text-heading_medium">
+                                                                <lightning-icon icon-name="utility:connected_apps"
+                                                                                size="small"></lightning-icon>
+                                                                SubToDo List
+                                                            </h3>
 
-                                        <template if:true={todo.Sub_ToDos__r}>
-                                            <lightning-card title="SubToDo" icon-name="custom:custom14">
+                                                            <div class="sub-todo-create-form">
+                                                                <br>
+                                                                <!-- start create subtodo"-->
+                                                                <lightning-record-edit-form onsuccess={handleAddSubToDoSuccess}
+                                                                                            object-api-name="Sub_ToDo__c">
+                                                                    <div  class="slds-grid">
+                                                                        <div class="sab-todo-name-input slds-col">
+                                                                            <lightning-input-field
+                                                                                    class="slds-is-expanded slds-hide slds-hidden"
+                                                                                    disabled value={todo.Id}
+                                                                                    field-name="Parent_ToDo__c">
+                                                                            </lightning-input-field>
+                                                                            <lightning-input-field data-id="reset"
+                                                                                                   variant="label-hidden"
+                                                                                                   field-name="Name">
+                                                                            </lightning-input-field>
+                                                                        </div>
+                                                                        <div class="slds-col">
+                                                                            <lightning-button
+                                                                                    class="slds-m-top_small"
+                                                                                    type="submit"
+                                                                                    variant="brand"
+                                                                                    label="Create new SubToDo"
+                                                                                    onclick={createNewSubToDo}>
+                                                                            </lightning-button>
+                                                                        </div>
+                                                                    </div>
+                                                                </lightning-record-edit-form>
+                                                            </div>
+                                                            <!-- end create subtodo"-->
+                                                            <div class="sub-todo-list">
+                                                                <template if:true={todo.Sub_ToDos__r}>
+                                                                    <br>
+                                                                    <ul>
+                                                                        <template for:each={todo.Sub_ToDos__r}
+                                                                                  for:item="subTodo">
+                                                                            <template if:true={subTodo.Status__c}>
+                                                                                <li key={subTodo.Id}>
+                                                                                    <div class="slds-grid">
+                                                                                        <div class="name_sub_todo_div slds-col"><lightning-input
+                                                                                                type="checkbox"
+                                                                                                data-recordid={subTodo.Id}
+                                                                                                label={subTodo.Name}
+                                                                                                onchange={handleChangeUncompleteStatus}
+                                                                                                checked
+                                                                                        >
+                                                                                        </lightning-input></div>
+                                                                                        <div class="slds-col"><a data-recordid={subTodo.Id} onclick={deleteSubToDo}> Delete</a></div>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </template>
+                                                                            <template if:false={subTodo.Status__c}>
+                                                                                <li key={subTodo.Id}>
+                                                                                    <div class="slds-grid">
+                                                                                        <div class="name_sub_todo_active_div slds-col"><lightning-input
+                                                                                                type="checkbox"
+                                                                                                data-recordid={subTodo.Id}
+                                                                                                label={subTodo.Name}
+                                                                                                onchange={handleChangeUncompleteStatus}>
+                                                                                        </lightning-input></div>
+                                                                                        <div class="slds-col">
+                                                                                            <a data-recordid={subTodo.Id} onclick={deleteSubToDo}> Delete</a></div>
+                                                                                    </div>
+                                                                                </li>
 
-                                                <ul class="slds-border_top slds-m-around_medium">
-                                                    <template for:each={todo.Sub_ToDos__r} for:item="subTodo">
-                                                        <template if:true={subTodo.Status__c}>
-                                                            <li style="text-decoration: line-through;" key={subTodo.Id}>
-                                                                <lightning-input class="completed-subtodo"
-                                                                                 type="checkbox"
-                                                                                 data-recordid={subTodo.Id}
-                                                                                 label={subTodo.Name}
-                                                                                 onchange={handleChangeCompleteStatus}
-                                                                                 checked>
-                                                                </lightning-input></li>
-                                                        </template>
-                                                        <template if:false={subTodo.Status__c}>
+                                                                            </template>
+                                                                        </template>
+                                                                    </ul>
 
-                                                            <li key={subTodo.Id}>
-                                                                <lightning-input
-                                                                        type="checkbox"
-                                                                        data-recordid={subTodo.Id}
-                                                                        label={subTodo.Name}
-                                                                        onchange={handleChangeUncompleteStatus}  >
-                                                                </lightning-input></li>
-
-                                                        </template>
-                                                    </template>
-                                                </ul>
-                                            </lightning-card>
-                                        </template>
-
-
-
- <!-------------------------END SUBTODO BLOCK------------------------------------------------------------------------->
-                                    </lightning-card>
-                                </div>
-                            </lightning-layout-item>
-                        </template>
-                    </template>
-                </lightning-tab>
-                <lightning-tab label="Completed ToDo">
-                    <h1 style = " padding-bottom: 0%; font-size: 2em;"><b>Сompleted ToDo</b></h1>
-                    <template if:true={completedToDoList}>
-                        <template for:each={completedToDoList} for:item="todo">
-
-                            <lightning-layout-item key={todo.Id} size="3" class="slds-var-p-around_x-small">
-
-                                <div class="slds-box">
-                                    <div style = "float: left; height: 6em;">
+                                                                </template>
+                                                            </div>
+                                                        </lightning-card>
+                                                    </div>
+                                                    <!-------------------------END SUBTODO BLOCK----------------------------------->
+                                                </lightning-tab>
+                                            </lightning-tabset>
+                                        </lightning-card>
                                     </div>
-                                    <lightning-card>
-                                        <h2 class="slds-text-heading_medium" slot="title">
-                                            <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
-                                            {todo.Name}
-                                        </h2>
-                                        <template if:true={todo.Description__c}>
-                                            <br />
-                                            <p class="slds-p-horizontal_small">{todo.Description__c}</p>
-                                        </template>
-                                        <br />
-                                        <div align="left">
-                                            <lightning-badge label={todo.Close_Date__c}></lightning-badge>
-                                            <lightning-badge label={todo.Priority__c}></lightning-badge>
-                                            <lightning-badge label={todo.RecordTypeName__c}></lightning-badge>
-                                        </div>
-                                        <br />
-                                        <lightning-button-group>
-                                            <lightning-button onclick={reopenToDo}
-                                                              data-recordid={todo.Id}
-                                                              label="Reopen"></lightning-button>
-
-                                            <lightning-button onclick={handleSetActiveSectionEdit} label="Edit"></lightning-button>
-
-                                            <lightning-button
-                                                    label="Delete"
-                                                    variant="destructive"
-                                                    icon-name="utility:delete"
-                                                    data-recordid={todo.Id}
-                                                    onclick={deleteToDo}>
-                                            </lightning-button>
-                                        </lightning-button-group>
-                                        <lightning-record-edit-form
-                                                class={editToDoForm}
-                                                onsuccess={handleToDoEditSuccess}
-                                                onsubmit={submitUpdateSuccess}
-                                                object-api-name="Todo__c"
-                                                record-id={todo.Id}>
-                                            <lightning-input-field
-                                                    field-name={nameToDo}>
-                                            </lightning-input-field>
-
-                                            <lightning-input-field
-                                                    field-name={descriptionToDo}>
-                                            </lightning-input-field>
-
-                                            <lightning-input-field
-                                                    field-name={closeDateToDo}>
-                                            </lightning-input-field>
-
-                                            <lightning-input-field
-                                                    field-name={priorityToDo}>
-                                            </lightning-input-field>
-
-                                            <div class="slds-var-m-top_medium">
-                                                <lightning-button
-                                                        onclick={handleUpdateToDoSuccess}
-                                                        variant="brand"
-                                                        type="submit"
-                                                        label="Save">
-                                                </lightning-button>
-                                            </div>
-                                        </lightning-record-edit-form>
-
-                                        <!-------------------------START SUBTODO BLOCK ------------------------------------------------------------------->
-                                        <div>
-                                            <!-- create subtodo"-->
-                                            <lightning-record-edit-form onsuccess={handleAddSubToDoSuccess}
-                                                                        object-api-name="Sub_ToDo__c">
-                                                <lightning-messages>
-                                                </lightning-messages>
-                                                <lightning-input-field class="slds-is-expanded slds-hide slds-hidden"
-                                                                       disabled value={todo.Id}
-                                                                       field-name="Parent_ToDo__c">
-                                                </lightning-input-field>
-                                                <lightning-input-field data-id="reset" field-name="Name" value={defaultSubToDoName}>
-                                                </lightning-input-field>
-                                                <lightning-button
-                                                        class="slds-m-top_small"
-                                                        type="submit"
-                                                        variant="brand"
-                                                        label="Create new SubToDo"
-                                                        onclick={createNewSubToDo}>
-                                                </lightning-button>
-                                            </lightning-record-edit-form>
-                                        </div>
-
-                                        <template if:true={todo.Sub_ToDos__r}>
-                                            <lightning-card title="SubToDo" icon-name="custom:custom14">
-
-                                                <ul class="slds-border_top slds-m-around_medium">
-                                                    <template for:each={todo.Sub_ToDos__r} for:item="subTodo">
-                                                        <template if:true={subTodo.Status__c}>
-                                                            <li style="text-decoration: line-through;" key={subTodo.Id}>
-                                                                <lightning-input class="completed-subtodo"
-                                                                                 type="checkbox"
-                                                                                 data-recordid={subTodo.Id}
-                                                                                 label={subTodo.Name}
-                                                                                 onchange={handleChangeCompleteStatus}
-                                                                                 checked>
-                                                                </lightning-input></li>
-                                                        </template>
-                                                        <template if:false={subTodo.Status__c}>
-
-                                                            <li key={subTodo.Id}>
-                                                                <lightning-input
-                                                                        type="checkbox"
-                                                                        data-recordid={subTodo.Id}
-                                                                        label={subTodo.Name}
-                                                                        onchange={handleChangeUncompleteStatus}  >
-                                                                </lightning-input></li>
-
-                                                        </template>
-                                                    </template>
-                                                </ul>
-                                            </lightning-card>
-                                        </template>
-
-
-
-                                        <!-------------------------END SUBTODO BLOCK------------------------------------------------------------------------->
-                                    </lightning-card>
-                                </div>
-                            </lightning-layout-item>
+                                </lightning-layout-item>
+                            </template>
                         </template>
-                    </template>
+                    </div>
                 </lightning-tab>
+                <!----------END COMPLETED TO DO TASKS -------------------------------->
             </lightning-tabset>
-
-
-
+            <!--------------- END TO DO LISTS BLOCK ----------------------------------------------------------------->
         </div>
+        <!--------------------------END BODY ------------------------------------------------------------------------>
     </div>
 </template>
