@@ -16,3 +16,48 @@
 .completed-subtodo{
     text-decoration: line-through;
 }
+
+.subtodo-input{
+    padding-right: 10%;
+    width: 600px;
+}
+
+.name_sub_todo_div{
+    width: 83%;
+    text-decoration: line-through;
+}
+
+
+.input-create-field{
+    width: 83%;
+}
+.name_sub_todo_active_div{
+    width: 83%;
+}
+
+.sub-todo-list{}
+
+.sub-todo-create-form{}
+
+.create-width-form{
+    width: 400px;
+}
+
+.create-width{
+    width: 580px;
+}
+
+.sab-todo-name-input{
+    width: 80%;
+}
+.sub-todo-block{
+    border-width: thin;
+}
+.header-name-block{
+    width: 83%;
+}
+
+
+
+
+
