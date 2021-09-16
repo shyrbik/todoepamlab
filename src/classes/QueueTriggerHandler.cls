@@ -1,6 +1,6 @@
 public with sharing class QueueTriggerHandler {
     public static void onBeforeInsert(List<Todo__c> todos) {
-        QueueTriggerHandlerHelper.assignmentQueue(todos);
+        QueueTriggerHandlerHelper.assignQueue(todos);
     }
 
     public static void onAfterInsert(Map<Id, Todo__c> todos) {

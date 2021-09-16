@@ -6,43 +6,24 @@ public with sharing class QueueTriggerHandlerHelper {
 
     static final String END_POINT = 'callout:Other_Org/services/apexrest/ToDo__c/';
 
-    public static void assignmentQueue(List<Todo__c> todos) {
+    public static void assignQueue(List<Todo__c> todos) {
         List<Group> queues = [SELECT Id, Name FROM Group WHERE Type = 'Queue'];
-        List<RecordType> recTypes = [SELECT Id, Name FROM RecordType LIMIT 3];
 
         for (Todo__c todo : todos) {
-            String recordtypeName =
-                    Schema.SObjectType.ToDo__c.getRecordTypeInfosById().get(todo.RecordTypeId).getName();
-
-            if (recordtypeName == 'Tomorrow') {
-                for (Group Queue : queues) {
-                    if (Queue.Name == 'Tomorrow ToDos' && todo.OwnerId != Queue.Id) {
-                        todo.OwnerId = Queue.Id;
-                    }
+            for (Group Queue : queues) {
+                if (Queue.Name == todo.RecordTypeName__c && todo.OwnerId != Queue.Id) {
+                    todo.OwnerId = Queue.Id;
                 }
             }
-            else if (recordtypeName == 'Later') {
-                for (Group Queue : queues) {
-                    if (Queue.Name == 'Later ToDos' && todo.OwnerId != Queue.Id) {
-                        todo.OwnerId = Queue.Id;
-                    }
-                }
-            } else {
-                for (Group Queue : queues) {
-                    if (Queue.Name == 'Today ToDos' && todo.OwnerId != Queue.Id) {
-                        todo.OwnerId = Queue.Id;
-                    }
-                }
-            }
-
         }
     }
 
     @Future(Callout = true)
     public static void insertToOtherOrg(Set<Id> todoIds)
     {
-        for (Todo__c todo : [SELECT Name, Description__c, Status__c, Priority__c FROM Todo__c WHERE Id IN:todoIds]) {
+        for (Todo__c todo : [SELECT Name, Description__c, Status__c, Priority__c, Close_Date__c FROM Todo__c WHERE Id IN:todoIds]) {
             ConnectToOrg.makePostCallout(getRequestBody(todo, true), END_POINT);
+            System.debug(getRequestBody(todo, true));
         }
     }
 
@@ -56,7 +37,8 @@ public with sharing class QueueTriggerHandlerHelper {
     @Future(Callout = true)
     public static void updateToOtherOrg(Set<Id> todoIds)
     {
-        for (Todo__c todo : [SELECT Name, Description__c, Status__c, Priority__c FROM Todo__c WHERE Id IN:todoIds]) {
+        for (Todo__c todo : [SELECT Name, Description__c, Status__c, Priority__c, Close_Date__c FROM Todo__c WHERE Id IN:todoIds]) {
+            System.debug(todo);
             ConnectToOrg.makePatchCallout(todo.Id, getRequestBody(todo, false), END_POINT);
         }
     }
@@ -66,9 +48,9 @@ public with sharing class QueueTriggerHandlerHelper {
         String requestBody;
         if(operation)
         {
-            requestBody = '{"name":"' + todo.Name + '","Description":"' + todo.Description__c + '","externalId":"' + todo.Id + '","status":"' + todo.Status__c +'","priority":"' + todo.Priority__c +'"}';
+            requestBody = '{"name":"' + todo.Name + '","Description":"' + todo.Description__c + '","externalId":"' + todo.Id + '","status":"' + todo.Status__c +'","priority":"' + todo.Priority__c +'","closeDate":"' + todo.Close_Date__c.format() + '"}';
         } else {
-            requestBody = '{"Name":"' + todo.Name + '","Description__c":"' + todo.Description__c + '","Status__c":"' + todo.Status__c + '","Priority__c":"' + todo.Priority__c +'"}';
+            requestBody = '{"Name":"' + todo.Name + '","Description__c":"' + todo.Description__c + '","Status__c":"' + todo.Status__c + '","Priority__c":"' + todo.Priority__c +'","Close_Date__c":"' + todo.Close_Date__c.format() +'"}';
         }
         return requestBody;
     }

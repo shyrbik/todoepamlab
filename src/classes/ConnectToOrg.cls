@@ -26,7 +26,7 @@ public with sharing class ConnectToOrg {
         Http http = new Http();
         HttpRequest request = getRequest('DELETE', END_POINT + ExternalId);
         HttpResponse response = http.send(request);
-        System.debug(response);
+        System.debug(response + '     ' + response.getBody());
         return response;
     }
 
@@ -37,7 +37,7 @@ public with sharing class ConnectToOrg {
         request.setHeader('X-HTTP-Method-Override', 'PATCH');
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
-        System.debug(response);
+        System.debug(response + '     ' + response.getBody());
         return response;
     }
 }
